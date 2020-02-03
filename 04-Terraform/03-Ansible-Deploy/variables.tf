@@ -1,15 +1,15 @@
 variable "key_name" {
-  default = "devops-my-aws-keypair"
+  default = "keypairforOregon"
 }
 
 variable "pvt_key" {
-  default = "/root/.ssh/amit-personal-aws.pem"
+  default = "/root/.ssh/mykey_ore.pem"
 }
 
 variable "us-east-zones" {
-  default = ["us-east-1a", "us-east-1b"]
+  default = ["us-west-2a", "us-west-2b"]
 }
 
 variable "sg-id" {
-  default = "sg-00c3c981ea2a2ad80"
+  default = "sg-00c58faccda5e161b"
 }
