@@ -36,6 +36,17 @@ node {
     stage('Archive-Artifacts') {
    archiveArtifacts 'target/*.war'
   }
+  
+  
+   stage('Jfrog Artifacory'){
+        def server= Artifactory.server 'Jfrog'
+            def uploadSpec= """{
+                "files": [{
+                "pattern": "target/*.war",
+                "target": "libs-release-local"}]
+            }"""
+            server.upload(uploadSpec)
+    }
  
    stage('Docker-Stage-Deployment') {
    sh label: '', script: 'docker-compose up -d --build'
