@@ -10,7 +10,7 @@ provider "aws" {
   
 }
 
-resource "aws_instance" "backend" {
+resource "aws_instance" "backend1" {
   ami                    = "ami-0994c095691a46fb5"
   instance_type          = "t2.micro"
   key_name               = "${var.key_name}"
