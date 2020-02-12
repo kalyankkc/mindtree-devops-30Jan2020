@@ -23,13 +23,32 @@ node {
    sh label: '', script: 'mvn test'
   }
   
+   stage('sonar') {
+        withSonarQubeEnv('sonarqube') {
+            sh "mvn sonar:sonar"
+        }
+    }
+  
    stage('Maven-Package') {
    sh label: '', script: 'mvn package'
   }
   
-   stage('Archive-Artifacts') {
+    stage('Archive-Artifacts') {
    archiveArtifacts 'target/*.war'
   }
+  
+  
+   stage('Jfrog Artifacory'){
+        def server= Artifactory.server 'Jfrog'
+            def uploadSpec= """{
+                "files": [{
+                "pattern": "target/*.war",
+                "target": "libs-release-local"}]
+            }"""
+            server.upload(uploadSpec)
+    }
+  
+ 
    stage('Docker-Stage-Deployment') {
    sh label: '', script: 'docker-compose up -d --build'
   }
@@ -60,7 +79,7 @@ notify('Job Completed')
 
 def notify(status){
     emailext (
-	to: "amitvashist7@gmail.com",
+	to: "kalyankkc118@gmail.com",
 	subject: "${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
 	 body: """<p>${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
 	<p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>""",
